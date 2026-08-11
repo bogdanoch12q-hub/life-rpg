@@ -1,6 +1,6 @@
 from flask import Flask, render_template_string, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3, os, base64, json, requests, hashlib, time
+import sqlite3, os, base64, json, requests, hashlib, time, random
 from datetime import datetime, timedelta
 from PIL import Image, ImageStat
 from functools import wraps
@@ -229,8 +229,6 @@ AUTH_HTML = f'''
     </div>
 </body></html>
 '''
-
-# --- РОУТЫ И СТРАНИЦЫ ---
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
