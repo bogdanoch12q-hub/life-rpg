@@ -30,7 +30,6 @@ def init_db():
     conn = get_db()
     c = conn.cursor()
     
-    # Безопасное обновление структуры базы данных
     c.execute('DROP TABLE IF EXISTS users')
     c.execute('DROP TABLE IF EXISTS quests')
     c.execute('DROP TABLE IF EXISTS shop')
@@ -139,7 +138,6 @@ def verify_with_ai(api_key, quest_title, file_path):
         except: pass
     return True, "Файл успешно принят системой!", False
 
-# --- ДИЗАЙН (GLASSMORPHISM & GLOW) ---
 GLOBAL_CSS = '''
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
     :root {
