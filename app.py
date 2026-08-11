@@ -29,7 +29,15 @@ def get_db():
 def init_db():
     conn = get_db()
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS users (
+    
+    # Безопасное обновление структуры базы данных
+    c.execute('DROP TABLE IF EXISTS users')
+    c.execute('DROP TABLE IF EXISTS quests')
+    c.execute('DROP TABLE IF EXISTS shop')
+    c.execute('DROP TABLE IF EXISTS inventory')
+    c.execute('DROP TABLE IF EXISTS used_hashes')
+
+    c.execute('''CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
@@ -47,7 +55,7 @@ def init_db():
         discipline INTEGER DEFAULT 1,
         last_auto_quest TEXT
     )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS quests (
+    c.execute('''CREATE TABLE quests (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         title TEXT NOT NULL,
@@ -55,25 +63,23 @@ def init_db():
         difficulty INTEGER NOT NULL,
         is_extra INTEGER DEFAULT 0
     )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS shop (
+    c.execute('''CREATE TABLE shop (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         price INTEGER NOT NULL
     )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS inventory (
+    c.execute('''CREATE TABLE inventory (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         title TEXT NOT NULL
     )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS used_hashes (
+    c.execute('''CREATE TABLE used_hashes (
         hash TEXT PRIMARY KEY,
         user_id INTEGER NOT NULL
     )''')
     
-    c.execute('SELECT COUNT(*) FROM shop')
-    if c.fetchone()[0] == 0:
-        c.executemany('INSERT INTO shop (title, price) VALUES (?, ?)', 
-                      [("☕ Чашка кофе / Энергетик", 40), ("🎮 1 час видеоигр", 70), ("🍕 Вкусняшка / Читмил", 120)])
+    c.executemany('INSERT INTO shop (title, price) VALUES (?, ?)', 
+                  [("☕ Чашка кофе / Энергетик", 40), ("🎮 1 час видеоигр", 70), ("🍕 Вкусняшка / Читмил", 120)])
     conn.commit()
     conn.close()
 
